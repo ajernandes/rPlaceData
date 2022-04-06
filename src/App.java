@@ -37,9 +37,9 @@ public class App {
                     String[] lineSplit = line.split(",");
                     String time = lineSplit[0];
                     int timeInt = toMS(time);
-                    int c = ThreadLocalRandom.current().nextInt(0, 15 + 1);
-                    // canvas.insert(new Tile(Integer.parseInt(lineSplit[2]), Integer.parseInt(lineSplit[3]), Integer.parseInt(lineSplit[4]), lineSplit[1], timeInt));
-                    canvas.insert(new Tile(Integer.parseInt(lineSplit[2]), Integer.parseInt(lineSplit[3]), c, lineSplit[1], timeInt));
+                    // int c = ThreadLocalRandom.current().nextInt(0, 15 + 1);
+                    canvas.insert(new Tile(Integer.parseInt(lineSplit[2]), Integer.parseInt(lineSplit[3]), Integer.parseInt(lineSplit[4]), lineSplit[1], timeInt));
+                    // canvas.insert(new Tile(Integer.parseInt(lineSplit[2]), Integer.parseInt(lineSplit[3]), c, lineSplit[1], timeInt));
 				    // read next line
 				    line = reader.readLine();
                 }
