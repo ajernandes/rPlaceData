@@ -37,6 +37,7 @@ public class Pixel implements Serializable {
     }
 
     public int getAverageRGB() {
+        if (tiles.size() == 0) return 0;
         int sumRed = 0;
         int sumGreen = 0;
         int sumBlue = 0;
