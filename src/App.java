@@ -46,12 +46,38 @@ public class App {
 
             /* from https://stackoverflow.com/questions/10767471/convert-2d-array-in-java-to-image */
 
-            String path = "first.png";
-            BufferedImage image = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_RGB);
+            // String path = "first.png";
+            // BufferedImage image = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_RGB);
+            // for (int x = 0; x < canvas.width; x++) {
+            //     for (int y = 0; y < canvas.heigth; y++) {
+            //         int c = canvas.getPixel(x, y).getFirstTile().color;
+            //         image.setRGB(x, y, getColorFromIndex(c));
+            //     }
+            // }
+        
+            // File ImageFile = new File(path);
+            // try {
+            //     ImageIO.write(image, "png", ImageFile);
+            // } catch (IOException e) {
+            //     e.printStackTrace();
+            // }
+
+            /* find out what was the most number of changes */
+            int max_changes = 0;
             for (int x = 0; x < canvas.width; x++) {
                 for (int y = 0; y < canvas.heigth; y++) {
-                    int c = canvas.getPixel(x, y).getFirstTile().color;
-                    image.setRGB(x, y, getColorFromIndex(c));
+                    if (max_changes < canvas.getPixel(x, y).getNumberOfTiles()) max_changes = canvas.getPixel(x, y).getNumberOfTiles();
+                }
+            }
+            /* open the image writer */
+            String path = "heatmap.png";
+            BufferedImage image = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_RGB);
+            /* for each pixel */
+            for (int x = 0; x < canvas.width; x++) {
+                for (int y = 0; y < canvas.heigth; y++) {
+                    /* get the number of times it changes and cooreleate that to a RGB code */
+                    int changes = canvas.getPixel(x, y).getNumberOfTiles();
+                    image.setRGB(x, y, getHeatColor(changes / max_changes));
                 }
             }
         
@@ -87,7 +113,6 @@ public class App {
 
     static int getColorFromIndex(int index) {
         switch (index) {
-            case -1: return 0;
             case 0: return 0xFFFFFF;
             case 1: return 0xE4E4E4;
             case 2: return 0x888888;
@@ -106,6 +131,19 @@ public class App {
             case 15: return 0x820080;
             default: return 0;
         }
+    }
+
+    static int getHeatColor(int percentile) {
+        if (percentile < 0.1) return 0x000000;
+        if (percentile < 0.2) return 0x000326;
+        if (percentile < 0.3) return 0x1e0047;
+        if (percentile < 0.4) return 0x2b0047;
+        if (percentile < 0.5) return 0x350047;
+        if (percentile < 0.6) return 0x400047;
+        if (percentile < 0.7) return 0x70002d;
+        if (percentile < 0.8) return 0xd40023;
+        if (percentile < 0.9) return 0xe60707;
+        return 0xFFFFFF;
     }
 }
 
