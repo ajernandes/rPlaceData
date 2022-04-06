@@ -25,8 +25,8 @@ public class App {
 			line = reader.readLine();
 			line = reader.readLine();
 			line = reader.readLine();
-			while (line != null) {
-			// for (int i = 0; i < 2000000; i++) {
+			// while (line != null) {
+			for (int i = 0; i < 2000000; i++) {
                 try {
                     String[] lineSplit = line.split(",");
                     String time = lineSplit[0];
@@ -69,6 +69,7 @@ public class App {
                     if (max_changes < canvas.getPixel(x, y).getNumberOfTiles()) max_changes = canvas.getPixel(x, y).getNumberOfTiles();
                 }
             }
+            System.out.println(max_changes);
             /* open the image writer */
             String path = "heatmap.png";
             BufferedImage image = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_RGB);
@@ -77,7 +78,8 @@ public class App {
                 for (int y = 0; y < canvas.heigth; y++) {
                     /* get the number of times it changes and cooreleate that to a RGB code */
                     int changes = canvas.getPixel(x, y).getNumberOfTiles();
-                    image.setRGB(x, y, getHeatColor(changes / max_changes));
+                    System.out.println(changes);
+                    image.setRGB(x, y, getHeatColor(changes /  (double) max_changes));
                 }
             }
         
@@ -133,7 +135,7 @@ public class App {
         }
     }
 
-    static int getHeatColor(int percentile) {
+    static int getHeatColor(double percentile) {
         if (percentile < 0.1) return 0x000000;
         if (percentile < 0.2) return 0x000326;
         if (percentile < 0.3) return 0x1e0047;

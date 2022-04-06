@@ -35,4 +35,20 @@ public class Pixel implements Serializable {
         if (tiles.size() == 0) return new Tile(x, y, -1, "user", -1);
         return tiles.get(tiles.size() - 1);
     }
+
+    public int getAverageRGB() {
+        int sumRed = 0;
+        int sumGreen = 0;
+        int sumBlue = 0;
+        for (Tile tile : tiles) {
+            sumRed += tile.color / 0x10000;
+            sumGreen += (tile.color / 0x100) % 100;
+            sumBlue += tile.color % 0x100;
+        }
+        int red = sumRed / this.tiles.size();
+        int green = sumGreen / this.tiles.size();
+        int blue = sumBlue / this.tiles.size();
+
+        return (red * 0x10000) + (green * 0x100) + blue;
+    }
 }

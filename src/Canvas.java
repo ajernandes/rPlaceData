@@ -19,8 +19,8 @@ public class Canvas implements Serializable {
     }
 
     public void insert(Tile tile) {
-        if (tile.x > width || tile.y > heigth) return;
-        this.pixels.get(tile.x).get(tile.y).addTile(new Tile(tile));
+        // if (tile.x > width || tile.y > heigth) return;
+        this.pixels.get(tile.x).get(tile.y).addTile(tile);
     }
 
     public Pixel getPixel(int x, int y) {
