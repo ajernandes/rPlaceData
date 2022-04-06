@@ -54,40 +54,56 @@ public class App {
 
             /* from https://stackoverflow.com/questions/10767471/convert-2d-array-in-java-to-image */
 
-            // String path = "first.png";
-            // BufferedImage image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
-            // for (int x = 0; x < canvas.width; x++) {
-            //     for (int y = 0; y < canvas.heigth; y++) {
-            //         int c = canvas.getPixel(x, y).getFirstTile().color;
-            //         image.setRGB(x, y, getColorFromIndex(c));
-            //     }
-            // }
+            String path = "first.png";
+            BufferedImage image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
+            for (int x = 0; x < canvas.width; x++) {
+                for (int y = 0; y < canvas.heigth; y++) {
+                    int c = canvas.getPixel(x, y).getFirstTile().color;
+                    image.setRGB(x, y, getColorFromIndex(c));
+                }
+            }
         
-            // File ImageFile = new File(path);
-            // try {
-            //     ImageIO.write(image, "png", ImageFile);
-            // } catch (IOException e) {
-            //     e.printStackTrace();
-            // }
+            File ImageFile = new File(path);
+            try {
+                ImageIO.write(image, "png", ImageFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            path = "final.png";
+            image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
+            for (int x = 0; x < canvas.width; x++) {
+                for (int y = 0; y < canvas.heigth; y++) {
+                    int c = canvas.getPixel(x, y).getLastTile().color;
+                    image.setRGB(x, y, getColorFromIndex(c));
+                }
+            }
+        
+            ImageFile = new File(path);
+            try {
+                ImageIO.write(image, "png", ImageFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             /* average color */
 
-            // String path = "average.png";
-            // BufferedImage image = new BufferedImage(canvas_width + 1, canvas_height + 1, BufferedImage.TYPE_INT_RGB);
-            // for (ArrayList<Pixel> row : canvas.pixels) {
-            //     for (Pixel pixel : row) {
-            //         image.setRGB(pixel.x, pixel.y, pixel.getAverageRGB());
-            //     }
-            // }
+            path = "average.png";
+            image = new BufferedImage(canvas_width + 1, canvas_height + 1, BufferedImage.TYPE_INT_RGB);
+            for (ArrayList<Pixel> row : canvas.pixels) {
+                for (Pixel pixel : row) {
+                    image.setRGB(pixel.x, pixel.y, pixel.getAverageRGB());
+                }
+            }
         
-            // File ImageFile = new File(path);
-            // try {
-            //     ImageIO.write(image, "png", ImageFile);
-            // } catch (IOException e) {
-            //     e.printStackTrace();
-            // }
+            ImageFile = new File(path);
+            try {
+                ImageIO.write(image, "png", ImageFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-            /* find out what was the most number of changes */
+            /* heatmap */
             int max_changes = 0;
             for (int x = 0; x < canvas.width; x++) {
                 for (int y = 0; y < canvas.heigth; y++) {
@@ -95,8 +111,8 @@ public class App {
                 }
             }
             /* open the image writer */
-            String path = "heatmap.png";
-            BufferedImage image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
+            path = "heatmap.png";
+            image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
             /* for each pixel */
             for (int x = 0; x < canvas.width; x++) {
                 for (int y = 0; y < canvas.heigth; y++) {
@@ -105,7 +121,7 @@ public class App {
                     image.setRGB(x, y, getHeatColor(changes /  (double) max_changes));
                 }
             }
-            File ImageFile = new File(path);
+            ImageFile = new File(path);
             try {
                 ImageIO.write(image, "png", ImageFile);
             } catch (IOException e) {
