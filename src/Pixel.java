@@ -37,18 +37,19 @@ public class Pixel implements Serializable {
     }
 
     public int getAverageRGB() {
-        if (tiles.size() == 0) return 0xFF0000;
+        if (tiles.size() == 0) return 0x000000;
         int sumRed = 0;
         int sumGreen = 0;
         int sumBlue = 0;
         for (Tile tile : tiles) {
-            sumRed += tile.color / 0x10000;
-            sumGreen += (tile.color / 0x100) % 100;
-            sumBlue += tile.color % 0x100;
+            int color = decodeColor(tile.color);
+            sumRed += color / 0x10000;
+            sumGreen += (color / 0x100) % 0x100;
+            sumBlue += color % 0x100;
         }
-        int red = sumRed / this.tiles.size();
-        int green = sumGreen / this.tiles.size();
-        int blue = sumBlue / this.tiles.size();
+        int red = (sumRed) / this.tiles.size();
+        int green = (sumGreen) / this.tiles.size();
+        int blue = (sumBlue) / this.tiles.size();
 
         return (red * 0x10000) + (green * 0x100) + blue;
     }
@@ -57,5 +58,27 @@ public class Pixel implements Serializable {
 
 
         return 0;
+    }
+
+    private int decodeColor (int index) {
+        switch (index) {
+            case 0: return 0xFFFFFF;
+            case 1: return 0xE4E4E4;
+            case 2: return 0x888888;
+            case 3: return 0x222222;
+            case 4: return 0xFFA7D1;
+            case 5: return 0xE50000;
+            case 6: return 0xE59500;
+            case 7: return 0xA06A42;
+            case 8: return 0xE5D900;
+            case 9: return 0x94E044;
+            case 10: return 0x02BE01;
+            case 11: return 0x00E5F0;
+            case 12: return 0x0083C7;
+            case 13: return 0x0000EA;
+            case 14: return 0xE04AFF;
+            case 15: return 0x820080;
+            default: return 0;
+        }
     }
 }

@@ -2,7 +2,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.imageio.ImageIO;
 
@@ -17,8 +19,7 @@ public class App {
 
         int canvas_width = 1000;
         int canvas_height = 1000;
-
-
+        
         Canvas canvas = new Canvas(canvas_width, canvas_height);
 
 		BufferedReader reader;
@@ -36,7 +37,9 @@ public class App {
                     String[] lineSplit = line.split(",");
                     String time = lineSplit[0];
                     int timeInt = toMS(time);
-                    canvas.insert(new Tile(Integer.parseInt(lineSplit[2]), Integer.parseInt(lineSplit[3]), Integer.parseInt(lineSplit[4]), lineSplit[1], timeInt));
+                    int c = ThreadLocalRandom.current().nextInt(0, 15 + 1);
+                    // canvas.insert(new Tile(Integer.parseInt(lineSplit[2]), Integer.parseInt(lineSplit[3]), Integer.parseInt(lineSplit[4]), lineSplit[1], timeInt));
+                    canvas.insert(new Tile(Integer.parseInt(lineSplit[2]), Integer.parseInt(lineSplit[3]), c, lineSplit[1], timeInt));
 				    // read next line
 				    line = reader.readLine();
                 }
@@ -51,30 +54,12 @@ public class App {
 
             /* from https://stackoverflow.com/questions/10767471/convert-2d-array-in-java-to-image */
 
-            String path = "first.png";
-            BufferedImage image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
-            for (int x = 0; x < canvas.width; x++) {
-                for (int y = 0; y < canvas.heigth; y++) {
-                    int c = canvas.getPixel(x, y).getFirstTile().color;
-                    image.setRGB(x, y, getColorFromIndex(c));
-                }
-            }
-        
-            File ImageFile = new File(path);
-            try {
-                ImageIO.write(image, "png", ImageFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            /* average color */
-
-            // String path = "average.png";
+            // String path = "first.png";
             // BufferedImage image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
             // for (int x = 0; x < canvas.width; x++) {
             //     for (int y = 0; y < canvas.heigth; y++) {
-            //         int color = canvas.getPixel(x, y).getAverageRGB();
-            //         image.setRGB(x, y, color);
+            //         int c = canvas.getPixel(x, y).getFirstTile().color;
+            //         image.setRGB(x, y, getColorFromIndex(c));
             //     }
             // }
         
@@ -84,6 +69,23 @@ public class App {
             // } catch (IOException e) {
             //     e.printStackTrace();
             // }
+
+            /* average color */
+
+            String path = "average.png";
+            BufferedImage image = new BufferedImage(canvas_width + 1, canvas_height + 1, BufferedImage.TYPE_INT_RGB);
+            for (ArrayList<Pixel> row : canvas.pixels) {
+                for (Pixel pixel : row) {
+                    image.setRGB(pixel.x, pixel.y, pixel.getAverageRGB());
+                }
+            }
+        
+            File ImageFile = new File(path);
+            try {
+                ImageIO.write(image, "png", ImageFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             /* find out what was the most number of changes */
         //     int max_changes = 0;
@@ -151,7 +153,7 @@ public class App {
             case 13: return 0x0000EA;
             case 14: return 0xE04AFF;
             case 15: return 0x820080;
-            default: return 0x00FF00;
+            default: return 0;
         }
     }
 
