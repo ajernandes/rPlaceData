@@ -11,9 +11,15 @@ import java.text.SimpleDateFormat;
 import java.awt.image.BufferedImage;
 
 public class App {
+
+    
     public static void main(String[] args) throws Exception {
 
-        Canvas canvas = new Canvas(1000, 1000);
+        int canvas_width = 1000;
+        int canvas_height = 1000;
+
+
+        Canvas canvas = new Canvas(canvas_width, canvas_height);
 
 		BufferedReader reader;
 
@@ -46,7 +52,7 @@ public class App {
             /* from https://stackoverflow.com/questions/10767471/convert-2d-array-in-java-to-image */
 
             String path = "first.png";
-            BufferedImage image = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_RGB);
+            BufferedImage image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
             for (int x = 0; x < canvas.width; x++) {
                 for (int y = 0; y < canvas.heigth; y++) {
                     int c = canvas.getPixel(x, y).getFirstTile().color;
@@ -64,7 +70,7 @@ public class App {
             /* average color */
 
             // String path = "average.png";
-            // BufferedImage image = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_RGB);
+            // BufferedImage image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
             // for (int x = 0; x < canvas.width; x++) {
             //     for (int y = 0; y < canvas.heigth; y++) {
             //         int color = canvas.getPixel(x, y).getAverageRGB();
@@ -86,10 +92,9 @@ public class App {
         //             if (max_changes < canvas.getPixel(x, y).getNumberOfTiles()) max_changes = canvas.getPixel(x, y).getNumberOfTiles();
         //         }
         //     }
-        //     System.out.println(max_changes);
         //     /* open the image writer */
         //     String path = "heatmap.png";
-        //     BufferedImage image = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_RGB);
+        //     BufferedImage image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
         //     /* for each pixel */
         //     for (int x = 0; x < canvas.width; x++) {
         //         for (int y = 0; y < canvas.heigth; y++) {
@@ -146,7 +151,7 @@ public class App {
             case 13: return 0x0000EA;
             case 14: return 0xE04AFF;
             case 15: return 0x820080;
-            default: return 0;
+            default: return 0x00FF00;
         }
     }
 

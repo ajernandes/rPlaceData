@@ -37,7 +37,7 @@ public class Pixel implements Serializable {
     }
 
     public int getAverageRGB() {
-        if (tiles.size() == 0) return 0;
+        if (tiles.size() == 0) return 0xFF0000;
         int sumRed = 0;
         int sumGreen = 0;
         int sumBlue = 0;
@@ -51,5 +51,11 @@ public class Pixel implements Serializable {
         int blue = sumBlue / this.tiles.size();
 
         return (red * 0x10000) + (green * 0x100) + blue;
+    }
+
+    public int getPixelAtTime(String time) {
+
+
+        return 0;
     }
 }
