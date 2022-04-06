@@ -36,6 +36,13 @@ public class Pixel implements Serializable {
         return tiles.get(tiles.size() - 1);
     }
 
+
+    public int getMedianRGB() {
+        Collections.sort(tiles);
+        if (tiles.size() == 0) return 0x333333;
+        return decodeColor(tiles.get(tiles.size()/2).color);
+    }
+
     public int getAverageRGB() {
         if (tiles.size() == 0) return 0x000000;
         int sumRed = 0;
@@ -78,7 +85,7 @@ public class Pixel implements Serializable {
             case 13: return 0x0000EA;
             case 14: return 0xE04AFF;
             case 15: return 0x820080;
-            default: return 0;
+            default: return 0xFFFFFF;
         }
     }
 }

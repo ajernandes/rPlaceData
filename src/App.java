@@ -30,8 +30,6 @@ public class App {
 					"data.csv"));
 			String line = reader.readLine();
 			line = reader.readLine();
-			line = reader.readLine();
-			line = reader.readLine();
 			while (line != null) {
                 try {
                     String[] lineSplit = line.split(",");
@@ -39,7 +37,6 @@ public class App {
                     // int timeInt = toMS(time);
                     // int c = ThreadLocalRandom.current().nextInt(0, 15 + 1);
                     canvas.insert(new Tile(Integer.parseInt(lineSplit[2]), Integer.parseInt(lineSplit[3]), Integer.parseInt(lineSplit[4]), lineSplit[1], Long.parseLong(lineSplit[0])));
-                    // canvas.insert(new Tile(Integer.parseInt(lineSplit[2]), Integer.parseInt(lineSplit[3]), c, lineSplit[1], timeInt));
 				    // read next line
 				    line = reader.readLine();
                 }
@@ -95,6 +92,54 @@ public class App {
                     image.setRGB(pixel.x, pixel.y, pixel.getAverageRGB());
                 }
             }
+        
+            ImageFile = new File(path);
+            try {
+                ImageIO.write(image, "png", ImageFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            /* median color */
+
+            path = "median.png";
+            image = new BufferedImage(canvas_width + 1, canvas_height + 1, BufferedImage.TYPE_INT_RGB);
+            for (ArrayList<Pixel> row : canvas.pixels) {
+                for (Pixel pixel : row) {
+                    image.setRGB(pixel.x, pixel.y, pixel.getMedianRGB());
+                }
+            }
+        
+            ImageFile = new File(path);
+            try {
+                ImageIO.write(image, "png", ImageFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            /* zero and one placement */
+
+            path = "lowactivity.png";
+            image = new BufferedImage(canvas_width + 1, canvas_height + 1, BufferedImage.TYPE_INT_RGB);
+            int untouched = 0;
+            int oncetouched = 0;
+            int useless = 0;
+            for (ArrayList<Pixel> row : canvas.pixels) {
+                for (Pixel pixel : row) {
+                    if (pixel.getNumberOfTiles() == 0) {
+                        image.setRGB(pixel.x, pixel.y, 0xFFFFFF);
+                        untouched++;
+                    }
+                    if (pixel.getNumberOfTiles() == 1) {
+                        image.setRGB(pixel.x, pixel.y, 0x333333);
+                        if (pixel.getFirstTile().color == 0) useless++;
+                        oncetouched++;
+                    }
+                }
+            }
+            System.out.println(untouched + " pixels with no placement made");
+            System.out.println(oncetouched + " pixels only touched once");
+            System.out.println(useless + " pixels touched once by placing white on them");
         
             ImageFile = new File(path);
             try {
@@ -169,17 +214,17 @@ public class App {
             case 13: return 0x0000EA;
             case 14: return 0xE04AFF;
             case 15: return 0x820080;
-            default: return 0;
+            default: return 0xFFFFFF;
         }
     }
 
     static int getHeatColor(double percentile) {
-        if (percentile < 0.000001) return 0x000000;
-        if (percentile < 0.0005) return 0x000326;
-        if (percentile < 0.0007) return 0x1e0047;
-        if (percentile < 0.001) return 0x2b0047;
-        if (percentile < 0.005) return 0x350047;
-        if (percentile < 0.010) return 0x400047;
+        if (percentile < 0.0000001) return 0x000000;
+        if (percentile < 0.00005) return 0x000326;
+        if (percentile < 0.00007) return 0x1e0047;
+        if (percentile < 0.0001) return 0x2b0047;
+        if (percentile < 0.0005) return 0x350047;
+        if (percentile < 0.0010) return 0x400047;
         if (percentile < 0.05) return 0x70002d;
         if (percentile < 0.10) return 0xd40023;
         if (percentile < 0.50) return 0xe60707;
