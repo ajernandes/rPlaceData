@@ -43,6 +43,16 @@ public class Pixel implements Serializable {
         return decodeColor(tiles.get(tiles.size()/2).color);
     }
 
+    public int getNumUsers() {
+        ArrayList<String> users = new ArrayList<>();
+        for (Tile tile : tiles) {
+            boolean contains = false;
+            for (String user : users) if (user.equals(tile.user)) contains = true;
+            if (!contains) users.add(tile.user);
+        }
+        return users.size();
+    }
+
     public int getAverageRGB() {
         if (tiles.size() == 0) return 0x000000;
         int sumRed = 0;

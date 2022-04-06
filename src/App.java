@@ -148,7 +148,32 @@ public class App {
                 e.printStackTrace();
             }
 
-            /* heatmap */
+            /* user heatmap */
+            int max_users = 0;
+            for (int x = 0; x < canvas.width; x++) {
+                for (int y = 0; y < canvas.heigth; y++) {
+                    if (max_users < canvas.getPixel(x, y).getNumUsers()) max_users = canvas.getPixel(x, y).getNumUsers();
+                }
+            }
+            /* open the image writer */
+            path = "userheatmap.png";
+            image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
+            /* for each pixel */
+            for (int x = 0; x < canvas.width; x++) {
+                for (int y = 0; y < canvas.heigth; y++) {
+                    /* get the number of times it changes and cooreleate that to a RGB code */
+                    int changes = canvas.getPixel(x, y).getNumUsers();
+                    image.setRGB(x, y, getHeatColor(changes /  (double) max_users));
+                }
+            }
+            ImageFile = new File(path);
+            try {
+                ImageIO.write(image, "png", ImageFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            /* changes heatmap */
             int max_changes = 0;
             for (int x = 0; x < canvas.width; x++) {
                 for (int y = 0; y < canvas.heigth; y++) {
@@ -219,15 +244,15 @@ public class App {
     }
 
     static int getHeatColor(double percentile) {
-        if (percentile < 0.0000001) return 0x000000;
-        if (percentile < 0.000005) return 0x000326;
-        if (percentile < 0.00007) return 0x1e0047;
-        if (percentile < 0.001) return 0x2b0047;
-        if (percentile < 0.001) return 0x350047;
-        if (percentile < 0.01) return 0x400047;
-        if (percentile < 0.05) return 0x70002d;
-        if (percentile < 0.10) return 0xd40023;
-        if (percentile < 0.20) return 0xe60707;
+        if (percentile < 0.00001) return 0x000000;
+        if (percentile < 0.0005) return 0x000326;
+        if (percentile < 0.0010) return 0x1e0047;
+        if (percentile < 0.0020) return 0x2b0047;
+        if (percentile < 0.0050) return 0x350047;
+        if (percentile < 0.0100) return 0x400047;
+        if (percentile < 0.0250) return 0x70002d;
+        if (percentile < 0.0400) return 0xd40023;
+        if (percentile < 0.0700) return 0xe60707;
         return 0xFFFFFF;
     }
 }
