@@ -131,7 +131,7 @@ public class App {
                         untouched++;
                     }
                     if (pixel.getNumberOfTiles() == 1) {
-                        image.setRGB(pixel.x, pixel.y, 0x333333);
+                        image.setRGB(pixel.x, pixel.y, getColorFromIndex(pixel.getFirstTile().color));
                         if (pixel.getFirstTile().color == 0) useless++;
                         oncetouched++;
                     }
@@ -140,6 +140,24 @@ public class App {
             System.out.println(untouched + " pixels with no placement made");
             System.out.println(oncetouched + " pixels only touched once");
             System.out.println(useless + " pixels touched once by placing white on them");
+        
+            ImageFile = new File(path);
+            try {
+                ImageIO.write(image, "png", ImageFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            path = "highactivity.png";
+            image = new BufferedImage(canvas_width + 1, canvas_height + 1, BufferedImage.TYPE_INT_RGB);
+            for (ArrayList<Pixel> row : canvas.pixels) {
+                for (Pixel pixel : row) {
+                    if (pixel.getNumberOfTiles() >= 100) {
+                        image.setRGB(pixel.x, pixel.y, getColorFromIndex(pixel.getLastTile().color));
+                    }
+                }
+            }
         
             ImageFile = new File(path);
             try {
