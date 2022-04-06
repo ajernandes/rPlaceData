@@ -32,13 +32,13 @@ public class App {
 			line = reader.readLine();
 			line = reader.readLine();
 			line = reader.readLine();
-			while (!line.equals("\n") || line != null) {
+			while (line != null) {
                 try {
                     String[] lineSplit = line.split(",");
-                    String time = lineSplit[0];
-                    int timeInt = toMS(time);
+                    // String time = lineSplit[0];
+                    // int timeInt = toMS(time);
                     // int c = ThreadLocalRandom.current().nextInt(0, 15 + 1);
-                    canvas.insert(new Tile(Integer.parseInt(lineSplit[2]), Integer.parseInt(lineSplit[3]), Integer.parseInt(lineSplit[4]), lineSplit[1], timeInt));
+                    canvas.insert(new Tile(Integer.parseInt(lineSplit[2]), Integer.parseInt(lineSplit[3]), Integer.parseInt(lineSplit[4]), lineSplit[1], Long.parseLong(lineSplit[0])));
                     // canvas.insert(new Tile(Integer.parseInt(lineSplit[2]), Integer.parseInt(lineSplit[3]), c, lineSplit[1], timeInt));
 				    // read next line
 				    line = reader.readLine();
@@ -72,45 +72,45 @@ public class App {
 
             /* average color */
 
-            String path = "average.png";
-            BufferedImage image = new BufferedImage(canvas_width + 1, canvas_height + 1, BufferedImage.TYPE_INT_RGB);
-            for (ArrayList<Pixel> row : canvas.pixels) {
-                for (Pixel pixel : row) {
-                    image.setRGB(pixel.x, pixel.y, pixel.getAverageRGB());
+            // String path = "average.png";
+            // BufferedImage image = new BufferedImage(canvas_width + 1, canvas_height + 1, BufferedImage.TYPE_INT_RGB);
+            // for (ArrayList<Pixel> row : canvas.pixels) {
+            //     for (Pixel pixel : row) {
+            //         image.setRGB(pixel.x, pixel.y, pixel.getAverageRGB());
+            //     }
+            // }
+        
+            // File ImageFile = new File(path);
+            // try {
+            //     ImageIO.write(image, "png", ImageFile);
+            // } catch (IOException e) {
+            //     e.printStackTrace();
+            // }
+
+            /* find out what was the most number of changes */
+            int max_changes = 0;
+            for (int x = 0; x < canvas.width; x++) {
+                for (int y = 0; y < canvas.heigth; y++) {
+                    if (max_changes < canvas.getPixel(x, y).getNumberOfTiles()) max_changes = canvas.getPixel(x, y).getNumberOfTiles();
                 }
             }
-        
+            /* open the image writer */
+            String path = "heatmap.png";
+            BufferedImage image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
+            /* for each pixel */
+            for (int x = 0; x < canvas.width; x++) {
+                for (int y = 0; y < canvas.heigth; y++) {
+                    /* get the number of times it changes and cooreleate that to a RGB code */
+                    int changes = canvas.getPixel(x, y).getNumberOfTiles();
+                    image.setRGB(x, y, getHeatColor(changes /  (double) max_changes));
+                }
+            }
             File ImageFile = new File(path);
             try {
                 ImageIO.write(image, "png", ImageFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            /* find out what was the most number of changes */
-        //     int max_changes = 0;
-        //     for (int x = 0; x < canvas.width; x++) {
-        //         for (int y = 0; y < canvas.heigth; y++) {
-        //             if (max_changes < canvas.getPixel(x, y).getNumberOfTiles()) max_changes = canvas.getPixel(x, y).getNumberOfTiles();
-        //         }
-        //     }
-        //     /* open the image writer */
-        //     String path = "heatmap.png";
-        //     BufferedImage image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
-        //     /* for each pixel */
-        //     for (int x = 0; x < canvas.width; x++) {
-        //         for (int y = 0; y < canvas.heigth; y++) {
-        //             /* get the number of times it changes and cooreleate that to a RGB code */
-        //             int changes = canvas.getPixel(x, y).getNumberOfTiles();
-        //             image.setRGB(x, y, getHeatColor(changes /  (double) max_changes));
-        //         }
-        //     }
-        //     File ImageFile = new File(path);
-        //     try {
-        //         ImageIO.write(image, "png", ImageFile);
-        //     } catch (IOException e) {
-        //         e.printStackTrace();
-        //     }
         }
 
 

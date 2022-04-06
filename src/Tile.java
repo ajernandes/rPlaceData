@@ -5,10 +5,10 @@ public class Tile implements Comparable<Tile>  {
     public int y;
     public int color; /* this is the color index from the data, not the RGB */
     public String user;
-    public int time; /* time the tile was placed it is expected to be a UNIX time stamp in milliseconds */
+    public long time; /* time the tile was placed it is expected to be a UNIX time stamp in milliseconds */
 
 
-    public Tile(int x, int y, int color, String user, int time) {
+    public Tile(int x, int y, int color, String user, long time) {
         this.x = x;
         this.y = y;
         this.color = color;
@@ -26,6 +26,6 @@ public class Tile implements Comparable<Tile>  {
 
     @Override
     public int compareTo(Tile otherTile) {
-        return Integer.compare(time, otherTile.time);
+        return Long.compare(time, otherTile.time);
     }
 }
