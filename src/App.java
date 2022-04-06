@@ -220,14 +220,14 @@ public class App {
 
     static int getHeatColor(double percentile) {
         if (percentile < 0.0000001) return 0x000000;
-        if (percentile < 0.00005) return 0x000326;
+        if (percentile < 0.000005) return 0x000326;
         if (percentile < 0.00007) return 0x1e0047;
-        if (percentile < 0.0001) return 0x2b0047;
-        if (percentile < 0.0005) return 0x350047;
-        if (percentile < 0.0010) return 0x400047;
+        if (percentile < 0.001) return 0x2b0047;
+        if (percentile < 0.001) return 0x350047;
+        if (percentile < 0.01) return 0x400047;
         if (percentile < 0.05) return 0x70002d;
         if (percentile < 0.10) return 0xd40023;
-        if (percentile < 0.50) return 0xe60707;
+        if (percentile < 0.20) return 0xe60707;
         return 0xFFFFFF;
     }
 }
