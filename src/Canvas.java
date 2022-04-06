@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Canvas {
+public class Canvas implements Serializable {
     public int width;
     public int heigth;
     public ArrayList<ArrayList<Pixel>> pixels;
@@ -18,8 +19,8 @@ public class Canvas {
     }
 
     public void insert(Tile tile) {
-        if (tile.location.x > width || tile.location.y > heigth) return;
-        this.pixels.get(tile.location.x).get(tile.location.y).addTile(new Tile(tile));
+        if (tile.x > width || tile.y > heigth) return;
+        this.pixels.get(tile.x).get(tile.y).addTile(new Tile(tile));
     }
 
     public Pixel getPixel(int x, int y) {
