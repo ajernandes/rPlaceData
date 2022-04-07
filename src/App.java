@@ -20,7 +20,7 @@ public class App {
 
         short canvas_width = 2000;
         short canvas_height = 2000;
-        short numFile = 1;
+        short numFile = 78;
 
         // /* run the multi-threaded import */
         // FileParser[] threadArray = new FileParser[numFile];
