@@ -12,39 +12,32 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.awt.image.BufferedImage;
 
+
 public class App {
 
     
     public static void main(String[] args) throws Exception {
 
-        int canvas_width = 1000;
-        int canvas_height = 1000;
+        int canvas_width = 2000;
+        int canvas_height = 2000;
+        int numFile = 78;
         
-        Canvas canvas = new Canvas(canvas_width, canvas_height);
+        /* run the multi-threaded import */
+        FileParser[] threadArray = new FileParser[numFile];
+        for (int i = 0; i < threadArray.length; i++) {
+            threadArray[i] = new FileParser();
+            threadArray[i].run(i);
+        }
 
-		BufferedReader reader;
+        for (FileParser thread : threadArray) {
+            try {
+                thread.join();
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
+        }
 
-        /* read the data from the CSV into a Canvas object */
-
-        reader = new BufferedReader(new FileReader(
-					"data.csv"));
-			String line = reader.readLine();
-			line = reader.readLine();
-			while (line != null) {
-                try {
-                    String[] lineSplit = line.split(",");
-                    // String time = lineSplit[0];
-                    // int timeInt = toMS(time);
-                    // int c = ThreadLocalRandom.current().nextInt(0, 15 + 1);
-                    canvas.insert(new Tile(Integer.parseInt(lineSplit[2]), Integer.parseInt(lineSplit[3]), Integer.parseInt(lineSplit[4]), lineSplit[1], Long.parseLong(lineSplit[0])));
-				    // read next line
-				    line = reader.readLine();
-                }
-                catch (ArrayIndexOutOfBoundsException e) {
-                    break;
-                }
-			}
-			reader.close();
+        Canvas canvas = FileParser.canvas;
 
             /* Create an image containing only the first tile placed on each pixel */
 
@@ -56,7 +49,7 @@ public class App {
             for (int x = 0; x < canvas.width; x++) {
                 for (int y = 0; y < canvas.heigth; y++) {
                     int c = canvas.getPixel(x, y).getFirstTile().color;
-                    image.setRGB(x, y, getColorFromIndex(c));
+                    image.setRGB(x, y, c);
                 }
             }
         
@@ -72,7 +65,7 @@ public class App {
             for (int x = 0; x < canvas.width; x++) {
                 for (int y = 0; y < canvas.heigth; y++) {
                     int c = canvas.getPixel(x, y).getLastTile().color;
-                    image.setRGB(x, y, getColorFromIndex(c));
+                    image.setRGB(x, y, c);
                 }
             }
         
@@ -131,7 +124,7 @@ public class App {
                         untouched++;
                     }
                     if (pixel.getNumberOfTiles() == 1) {
-                        image.setRGB(pixel.x, pixel.y, getColorFromIndex(pixel.getFirstTile().color));
+                        image.setRGB(pixel.x, pixel.y, pixel.getFirstTile().color);
                         if (pixel.getFirstTile().color == 0) useless++;
                         oncetouched++;
                     }
@@ -153,8 +146,8 @@ public class App {
             image = new BufferedImage(canvas_width + 1, canvas_height + 1, BufferedImage.TYPE_INT_RGB);
             for (ArrayList<Pixel> row : canvas.pixels) {
                 for (Pixel pixel : row) {
-                    if (pixel.getNumberOfTiles() >= 100) {
-                        image.setRGB(pixel.x, pixel.y, getColorFromIndex(pixel.getLastTile().color));
+                    if (pixel.getNumberOfTiles() >= 1000) {
+                        image.setRGB(pixel.x, pixel.y, pixel.getLastTile().color);
                     }
                 }
             }
@@ -216,50 +209,6 @@ public class App {
                 e.printStackTrace();
             }
         }
-
-
-    /* modified from https://phpfog.com/how-to-convert-timestamp-to-unix-time-epoch-in-java/ */
-
-    public static Integer toMS (String timestamp){
-        if(timestamp == null) return null;
-        try {
-          SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS 'UTC'");
-          Date dt = sdf.parse(timestamp);
-          long epoch = dt.getTime();
-          return (int)(epoch);
-        } catch(ParseException e) {
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss 'UTC'");
-                Date dt = sdf.parse(timestamp);
-                long epoch = dt.getTime();
-                return (int)(epoch);
-            } catch (ParseException f) {
-                return null;
-            }
-        }
-    }
-
-    static int getColorFromIndex(int index) {
-        switch (index) {
-            case 0: return 0xFFFFFF;
-            case 1: return 0xE4E4E4;
-            case 2: return 0x888888;
-            case 3: return 0x222222;
-            case 4: return 0xFFA7D1;
-            case 5: return 0xE50000;
-            case 6: return 0xE59500;
-            case 7: return 0xA06A42;
-            case 8: return 0xE5D900;
-            case 9: return 0x94E044;
-            case 10: return 0x02BE01;
-            case 11: return 0x00E5F0;
-            case 12: return 0x0083C7;
-            case 13: return 0x0000EA;
-            case 14: return 0xE04AFF;
-            case 15: return 0x820080;
-            default: return 0xFFFFFF;
-        }
-    }
 
     static int getHeatColor(double percentile) {
         if (percentile < 0.00001) return 0x000000;
