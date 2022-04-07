@@ -22,22 +22,6 @@ public class App {
         short canvas_height = 2000;
         short numFile = 78;
         
-        /* run the multi-threaded compression */
-        BinFileGen[] compArray = new BinFileGen[numFile];
-        for (int i = 0; i < compArray.length; i++) {
-            compArray[i] = new BinFileGen();
-            compArray[i].run(i);
-        }
-
-        for (BinFileGen thread : compArray) {
-            try {
-                thread.join();
-            } catch (InterruptedException ie) {
-                ie.printStackTrace();
-            }
-        }
-        
-        if (true) return;
 
 
         /* run the multi-threaded import */
