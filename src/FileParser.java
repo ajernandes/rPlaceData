@@ -30,7 +30,7 @@ public class FileParser extends Thread {
                 line = reader.readLine();
             }
             catch (ArrayIndexOutOfBoundsException e) {
-                continue;
+                break;
             }
         }
         reader.close();
