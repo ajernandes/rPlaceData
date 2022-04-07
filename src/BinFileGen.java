@@ -1,30 +1,34 @@
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Time;
 import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /* reads in the 78 input files using multi-threading */
 
-public class FileParser extends Thread {
-
-    private static final Object gatekeeper = new Object();
-    public static Canvas canvas = new Canvas((short) 2000, (short) 2000);
-
+public class BinFileGen extends Thread {
     public void run(int index) throws IOException {
         
-        /* read the data from the CSV into a Canvas object */
-        BufferedReader reader;
+        /* read the data from the CSV into a binary file */
 
-        reader = new BufferedReader(new FileReader("data/data_" + index + ".csv"));
+        BufferedReader reader = new BufferedReader(new FileReader("data/data_" + index + ".csv"));
+        BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream("data/comp/data_" + index + ".csv"));
         String line = reader.readLine();
         while (line != null) {
             try {
                 String[] lineSplit = line.split(",");
-                synchronized (gatekeeper) {
-                    canvas.insert(new Tile(Integer.valueOf(lineSplit[2].substring(1), 16), toMS(lineSplit[0])), 2000 * Integer.parseInt(lineSplit[3].substring(1)) + Integer.parseInt(lineSplit[4].substring(0, lineSplit[4].length() - 1)));
-                }
+                int color = Integer.valueOf(lineSplit[2].substring(1), 16);
+                long offset = toMS("2022-01-01 00:00:00.000 UTC");
+                long time = toMS(lineSplit[0]) - offset;
+                int linearIndex = 2000 * Integer.parseInt(lineSplit[3].substring(1)) + Integer.parseInt(lineSplit[4].substring(0, lineSplit[4].length() - 1));
+                writer.write(color);
+                writer.write((int)time);
+                writer.write(linearIndex);
                 // read next line
                 line = reader.readLine();
             }
@@ -33,8 +37,8 @@ public class FileParser extends Thread {
             }
         }
         reader.close();
+        writer.close();
     }
-
 
 
     /* modified from https://phpfog.com/how-to-convert-timestamp-to-unix-time-epoch-in-java/ */
