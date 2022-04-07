@@ -26,13 +26,13 @@ public class Pixel implements Serializable {
 
     public Tile getFirstTile() {
         Collections.sort(tiles);
-        if (tiles.size() == 0) return new Tile(x, y, -1, "user", -1);
+        if (tiles.size() == 0) return new Tile(x, y, -1, 0, -1);
         return tiles.get(0);
     }
 
     public Tile getLastTile() {
         Collections.sort(tiles);
-        if (tiles.size() == 0) return new Tile(x, y, -1, "user", -1);
+        if (tiles.size() == 0) return new Tile(x, y, -1, 0, -1);
         return tiles.get(tiles.size() - 1);
     }
 
@@ -44,12 +44,8 @@ public class Pixel implements Serializable {
     }
 
     public int getNumUsers() {
-        ArrayList<String> users = new ArrayList<>();
-        for (Tile tile : tiles) {
-            boolean contains = false;
-            for (String user : users) if (user.equals(tile.user)) contains = true;
-            if (!contains) users.add(tile.user);
-        }
+        ArrayList<Integer> users = new ArrayList<>();
+        for (Tile tile : tiles) if (!users.contains(tile.user)) users.add(tile.user);
         return users.size();
     }
 

@@ -24,7 +24,7 @@ public class FileParser extends Thread {
             try {
                 String[] lineSplit = line.split(",");
                 synchronized (gatekeeper) {
-                    canvas.insert(new Tile(Integer.parseInt(lineSplit[3].substring(1)), Integer.parseInt(lineSplit[4].substring(0, lineSplit[4].length() - 1)), Integer.valueOf(lineSplit[2].substring(1), 16), lineSplit[1], toMS(lineSplit[0])));
+                    canvas.insert(new Tile(Integer.parseInt(lineSplit[3].substring(1)), Integer.parseInt(lineSplit[4].substring(0, lineSplit[4].length() - 1)), Integer.valueOf(lineSplit[2].substring(1), 16), lineSplit[1].hashCode(), toMS(lineSplit[0])));
                 }
                 // read next line
                 line = reader.readLine();
