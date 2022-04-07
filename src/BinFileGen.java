@@ -1,7 +1,7 @@
 import java.io.IOException;
 
 public class BinFileGen {
-    public void main(String args[]) throws IOException {
+    public static void main(String args[]) throws IOException {
 
         short numFile = 78;
 
