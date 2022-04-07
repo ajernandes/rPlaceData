@@ -14,18 +14,18 @@ public class FileParserCompressed extends Thread {
         
         /* read the data from the binary file into a Canvas object */
 
-        BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream("data/comp/data_" + index + ".bin"));
+        BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream("../data/comp/data_" + index + ".bin"));
         while (inputStream.available() != 0) {
             try {
                 byte[] colorArr = {0, 0, 0, 0};
                 byte[] indexArr = {0, 0, 0, 0};
                 byte[] timeArr = {0, 0, 0, 0};
                 inputStream.read(colorArr, 0, 4);
-                inputStream.read(indexArr, 0, 4);
                 inputStream.read(timeArr, 0, 4);
+                inputStream.read(indexArr, 0, 4);
                 int color = byteArrayToInt(colorArr);
-                int linearIndex = byteArrayToInt(indexArr);
                 int time = byteArrayToInt(timeArr);
+                int linearIndex = byteArrayToInt(indexArr);
                 synchronized (gatekeeper) {
                     canvas.insert(new Tile(color, time), linearIndex);
                 }

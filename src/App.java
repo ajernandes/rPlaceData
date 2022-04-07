@@ -20,25 +20,39 @@ public class App {
 
         short canvas_width = 2000;
         short canvas_height = 2000;
-        short numFile = 78;
-        
+        short numFile = 1;
 
+        // /* run the multi-threaded import */
+        // FileParser[] threadArray = new FileParser[numFile];
+        // for (int i = 0; i < threadArray.length; i++) {
+        //     threadArray[i] = new FileParser();
+        //     threadArray[i].run(i);
+        // }
 
+        // for (FileParser thread : threadArray) {
+        //     try {
+        //         thread.join();
+        //     } catch (InterruptedException ie) {
+        //         ie.printStackTrace();
+        //     }
+        // }
+        // Canvas canvas = FileParser.canvas;
         /* run the multi-threaded import */
-        FileParser[] threadArray = new FileParser[numFile];
+
+        FileParserCompressed[] threadArray = new FileParserCompressed[numFile];
         for (int i = 0; i < threadArray.length; i++) {
-            threadArray[i] = new FileParser();
+            threadArray[i] = new FileParserCompressed();
             threadArray[i].run(i);
         }
 
-        for (FileParser thread : threadArray) {
+        for (FileParserCompressed thread : threadArray) {
             try {
                 thread.join();
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
         }
-        Canvas canvas = FileParser.canvas;
+        Canvas canvas = FileParserCompressed.canvas;
 
             /* Create an image containing only the first tile placed on each pixel */
 
