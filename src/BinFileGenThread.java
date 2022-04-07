@@ -19,6 +19,7 @@ public class BinFileGenThread extends Thread {
         BufferedReader reader = new BufferedReader(new FileReader("../data/data_" + index + ".csv"));
         BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream("../data/comp/data_" + index + ".bin"));
         String line = reader.readLine();
+        line = reader.readLine();
         while (line != null) {
             try {
                 String[] lineSplit = line.split(",");
