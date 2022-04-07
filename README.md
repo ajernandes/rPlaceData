@@ -12,6 +12,6 @@
 
 ## To run:
 
-Run `downloader.py` in `/data`, this will download about 20 gb of data.
-
-Compile and run `App.java`
+1. Run `downloader.py` in `/data`, this will download about 20 gb of data.
+2. Compile and run `App.java`
+3. Hopefully you have enough ram
