@@ -4,7 +4,6 @@ public class Tile implements Comparable<Tile>  {
     public int x;
     public int y;
     public int color; /* this is the color index from the data, not the RGB */
-    public int user;
     public long time; /* time the tile was placed it is expected to be a UNIX time stamp in milliseconds */
 
 
@@ -12,7 +11,6 @@ public class Tile implements Comparable<Tile>  {
         this.x = x;
         this.y = y;
         this.color = color;
-        this.user = user;
         this.time = time;
     }
 
@@ -20,7 +18,6 @@ public class Tile implements Comparable<Tile>  {
         this.x = tile.x;
         this.y = tile.y;
         this.color = tile.color;
-        this.user = tile.user;
         this.time = tile.time;
     }
 

@@ -159,31 +159,6 @@ public class App {
                 e.printStackTrace();
             }
 
-            /* user heatmap */
-            int max_users = 0;
-            for (int x = 0; x < canvas.width; x++) {
-                for (int y = 0; y < canvas.heigth; y++) {
-                    if (max_users < canvas.getPixel(x, y).getNumUsers()) max_users = canvas.getPixel(x, y).getNumUsers();
-                }
-            }
-            /* open the image writer */
-            path = "userheatmap.png";
-            image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
-            /* for each pixel */
-            for (int x = 0; x < canvas.width; x++) {
-                for (int y = 0; y < canvas.heigth; y++) {
-                    /* get the number of times it changes and cooreleate that to a RGB code */
-                    int changes = canvas.getPixel(x, y).getNumUsers();
-                    image.setRGB(x, y, getHeatColor(changes /  (double) max_users));
-                }
-            }
-            ImageFile = new File(path);
-            try {
-                ImageIO.write(image, "png", ImageFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
             /* changes heatmap */
             int max_changes = 0;
             for (int x = 0; x < canvas.width; x++) {
