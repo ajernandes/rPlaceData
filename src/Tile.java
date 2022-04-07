@@ -7,7 +7,7 @@ public class Tile implements Comparable<Tile>  {
     public long time; /* time the tile was placed it is expected to be a UNIX time stamp in milliseconds */
 
 
-    public Tile(int x, int y, int color, int user, long time) {
+    public Tile(int x, int y, int color, long time) {
         this.x = x;
         this.y = y;
         this.color = color;

@@ -26,13 +26,13 @@ public class Pixel implements Serializable {
 
     public Tile getFirstTile() {
         Collections.sort(tiles);
-        if (tiles.size() == 0) return new Tile(x, y, -1, 0, -1);
+        if (tiles.size() == 0) return new Tile(x, y, -1, -1);
         return tiles.get(0);
     }
 
     public Tile getLastTile() {
         Collections.sort(tiles);
-        if (tiles.size() == 0) return new Tile(x, y, -1, 0, -1);
+        if (tiles.size() == 0) return new Tile(x, y, -1, -1);
         return tiles.get(tiles.size() - 1);
     }
 
