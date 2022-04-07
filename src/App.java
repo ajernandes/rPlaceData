@@ -18,9 +18,9 @@ public class App {
     
     public static void main(String[] args) throws Exception {
 
-        int canvas_width = 2000;
-        int canvas_height = 2000;
-        int numFile = 78;
+        short canvas_width = 2000;
+        short canvas_height = 2000;
+        short numFile = 78;
         
         /* run the multi-threaded import */
         FileParser[] threadArray = new FileParser[numFile];
@@ -46,12 +46,8 @@ public class App {
 
             String path = "first.png";
             BufferedImage image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
-            for (int x = 0; x < canvas.width; x++) {
-                for (int y = 0; y < canvas.heigth; y++) {
-                    int c = canvas.getPixel(x, y).getFirstTile().color;
-                    image.setRGB(x, y, c);
-                }
-            }
+            for (Pixel pixel : canvas.pixels.values()) image.setRGB(pixel.getX(), pixel.getY(), pixel.getFirstTile().color);
+
         
             File ImageFile = new File(path);
             try {
@@ -62,12 +58,8 @@ public class App {
 
             path = "final.png";
             image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
-            for (int x = 0; x < canvas.width; x++) {
-                for (int y = 0; y < canvas.heigth; y++) {
-                    int c = canvas.getPixel(x, y).getLastTile().color;
-                    image.setRGB(x, y, c);
-                }
-            }
+            for (Pixel pixel : canvas.pixels.values()) image.setRGB(pixel.getX(), pixel.getY(), pixel.getLastTile().color);
+
         
             ImageFile = new File(path);
             try {
@@ -79,12 +71,8 @@ public class App {
             /* average color */
 
             path = "average.png";
-            image = new BufferedImage(canvas_width + 1, canvas_height + 1, BufferedImage.TYPE_INT_RGB);
-            for (ArrayList<Pixel> row : canvas.pixels) {
-                for (Pixel pixel : row) {
-                    image.setRGB(pixel.x, pixel.y, pixel.getAverageRGB());
-                }
-            }
+            image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
+            for (Pixel pixel : canvas.pixels.values()) image.setRGB(pixel.getX(), pixel.getY(), pixel.getAverageRGB());
         
             ImageFile = new File(path);
             try {
@@ -97,11 +85,8 @@ public class App {
 
             path = "median.png";
             image = new BufferedImage(canvas_width + 1, canvas_height + 1, BufferedImage.TYPE_INT_RGB);
-            for (ArrayList<Pixel> row : canvas.pixels) {
-                for (Pixel pixel : row) {
-                    image.setRGB(pixel.x, pixel.y, pixel.getMedianRGB());
-                }
-            }
+            for (Pixel pixel : canvas.pixels.values()) image.setRGB(pixel.getX(), pixel.getY(), pixel.getMedianRGB());
+
         
             ImageFile = new File(path);
             try {
@@ -117,17 +102,15 @@ public class App {
             int untouched = 0;
             int oncetouched = 0;
             int useless = 0;
-            for (ArrayList<Pixel> row : canvas.pixels) {
-                for (Pixel pixel : row) {
-                    if (pixel.getNumberOfTiles() == 0) {
-                        image.setRGB(pixel.x, pixel.y, 0xFFFFFF);
-                        untouched++;
-                    }
-                    if (pixel.getNumberOfTiles() == 1) {
-                        image.setRGB(pixel.x, pixel.y, pixel.getFirstTile().color);
-                        if (pixel.getFirstTile().color == 0) useless++;
-                        oncetouched++;
-                    }
+            for (Pixel pixel : canvas.pixels.values()) {
+                if (pixel.getNumberOfTiles() == 0) {
+                    image.setRGB(pixel.getX(), pixel.getY(), 0xFFFFFF);
+                    untouched++;
+                }
+                if (pixel.getNumberOfTiles() == 1) {
+                    image.setRGB(pixel.getX(), pixel.getY(), pixel.getFirstTile().color);
+                    if (pixel.getFirstTile().color == 0) useless++;
+                    oncetouched++;
                 }
             }
             System.out.println(untouched + " pixels with no placement made");
@@ -144,14 +127,11 @@ public class App {
 
             path = "highactivity.png";
             image = new BufferedImage(canvas_width + 1, canvas_height + 1, BufferedImage.TYPE_INT_RGB);
-            for (ArrayList<Pixel> row : canvas.pixels) {
-                for (Pixel pixel : row) {
-                    if (pixel.getNumberOfTiles() >= 1000) {
-                        image.setRGB(pixel.x, pixel.y, pixel.getLastTile().color);
-                    }
+            for (Pixel pixel : canvas.pixels.values()) {
+                if (pixel.getNumberOfTiles() >= 1000) {
+                    image.setRGB(pixel.getX(), pixel.getY(), pixel.getLastTile().color);
                 }
             }
-        
             ImageFile = new File(path);
             try {
                 ImageIO.write(image, "png", ImageFile);
@@ -159,30 +139,30 @@ public class App {
                 e.printStackTrace();
             }
 
-            /* changes heatmap */
-            int max_changes = 0;
-            for (int x = 0; x < canvas.width; x++) {
-                for (int y = 0; y < canvas.heigth; y++) {
-                    if (max_changes < canvas.getPixel(x, y).getNumberOfTiles()) max_changes = canvas.getPixel(x, y).getNumberOfTiles();
-                }
-            }
-            /* open the image writer */
-            path = "heatmap.png";
-            image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
-            /* for each pixel */
-            for (int x = 0; x < canvas.width; x++) {
-                for (int y = 0; y < canvas.heigth; y++) {
-                    /* get the number of times it changes and cooreleate that to a RGB code */
-                    int changes = canvas.getPixel(x, y).getNumberOfTiles();
-                    image.setRGB(x, y, getHeatColor(changes /  (double) max_changes));
-                }
-            }
-            ImageFile = new File(path);
-            try {
-                ImageIO.write(image, "png", ImageFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            // /* changes heatmap */
+            // int max_changes = 0;
+            // for (int x = 0; x < canvas.width; x++) {
+            //     for (int y = 0; y < canvas.heigth; y++) {
+            //         if (max_changes < canvas.getPixel(x, y).getNumberOfTiles()) max_changes = canvas.getPixel(x, y).getNumberOfTiles();
+            //     }
+            // }
+            // /* open the image writer */
+            // path = "heatmap.png";
+            // image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
+            // /* for each pixel */
+            // for (int x = 0; x < canvas.width; x++) {
+            //     for (int y = 0; y < canvas.heigth; y++) {
+            //         /* get the number of times it changes and cooreleate that to a RGB code */
+            //         int changes = canvas.getPixel(x, y).getNumberOfTiles();
+            //         image.setRGB(x, y, getHeatColor(changes /  (double) max_changes));
+            //     }
+            // }
+            // ImageFile = new File(path);
+            // try {
+            //     ImageIO.write(image, "png", ImageFile);
+            // } catch (IOException e) {
+            //     e.printStackTrace();
+            // }
         }
 
     static int getHeatColor(double percentile) {

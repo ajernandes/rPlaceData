@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 public class FileParser extends Thread {
 
     private static final Object gatekeeper = new Object();
-    public static Canvas canvas = new Canvas(2000, 2000);
+    public static Canvas canvas = new Canvas((short) 2000, (short) 2000);
 
     public void run(int index) throws IOException {
         
@@ -24,7 +24,7 @@ public class FileParser extends Thread {
             try {
                 String[] lineSplit = line.split(",");
                 synchronized (gatekeeper) {
-                    canvas.insert(new Tile(Integer.parseInt(lineSplit[3].substring(1)), Integer.parseInt(lineSplit[4].substring(0, lineSplit[4].length() - 1)), Integer.valueOf(lineSplit[2].substring(1), 16), toMS(lineSplit[0])));
+                    canvas.insert(new Tile(Integer.valueOf(lineSplit[2].substring(1), 16), toMS(lineSplit[0])), 2000 * Integer.parseInt(lineSplit[3].substring(1)) + Integer.parseInt(lineSplit[4].substring(0, lineSplit[4].length() - 1)));
                 }
                 // read next line
                 line = reader.readLine();

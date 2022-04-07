@@ -1,29 +1,26 @@
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Canvas implements Serializable {
-    public int width;
-    public int heigth;
-    public ArrayList<ArrayList<Pixel>> pixels;
+    public short width;
+    public short heigth;
+    public HashMap<Integer,Pixel> pixels;
 
-    public Canvas(int width, int height) {
+    public Canvas(short width, short height) {
         this.width = width;
         this.heigth = height;
-        this.pixels = new ArrayList<ArrayList<Pixel>>();
-        for (int i = 0; i < width + 1; i++) {
-            this.pixels.add(new ArrayList<Pixel>());
-            for (int j = 0; j < height + 1; j++) {
-                this.pixels.get(i).add(new Pixel(i, j, 0));
-            }
-        }
+        this.pixels = new HashMap<Integer,Pixel>(width * height);
+        for (int i = 0; i < width * height; i++) this.pixels.put(i, new Pixel(i, 0));
     }
 
-    public void insert(Tile tile) {
+    public void insert(Tile tile, int linearIndex) {
         // if (tile.x > width || tile.y > heigth) return;
-        this.pixels.get(tile.x).get(tile.y).addTile(tile);
+        this.pixels.get(linearIndex).addTile(tile);
     }
 
     public Pixel getPixel(int x, int y) {
-        return this.pixels.get(x).get(y);
+        int index = (heigth * y) + x;
+        return this.pixels.get(index);
     }
 }
