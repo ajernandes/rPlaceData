@@ -99,7 +99,7 @@ public class App {
             /* median color */
 
             path = "median.png";
-            image = new BufferedImage(canvas_width + 1, canvas_height + 1, BufferedImage.TYPE_INT_RGB);
+            image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
             for (Pixel pixel : canvas.pixels.values()) image.setRGB(pixel.getX(), pixel.getY(), pixel.getMedianRGB());
 
         
@@ -113,7 +113,7 @@ public class App {
             /* zero and one placement */
 
             path = "lowactivity.png";
-            image = new BufferedImage(canvas_width + 1, canvas_height + 1, BufferedImage.TYPE_INT_RGB);
+            image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
             int untouched = 0;
             int oncetouched = 0;
             int useless = 0;
@@ -123,7 +123,7 @@ public class App {
                     untouched++;
                 }
                 if (pixel.getNumberOfTiles() == 1) {
-                    image.setRGB(pixel.getX(), pixel.getY(), pixel.getFirstTile().color);
+                    // image.setRGB(pixel.getX(), pixel.getY(), pixel.getFirstTile().color);
                     if (pixel.getFirstTile().color == 0) useless++;
                     oncetouched++;
                 }
@@ -141,7 +141,7 @@ public class App {
 
 
             path = "highactivity.png";
-            image = new BufferedImage(canvas_width + 1, canvas_height + 1, BufferedImage.TYPE_INT_RGB);
+            image = new BufferedImage(canvas_width, canvas_height, BufferedImage.TYPE_INT_RGB);
             for (Pixel pixel : canvas.pixels.values()) {
                 if (pixel.getNumberOfTiles() >= 1000) {
                     image.setRGB(pixel.getX(), pixel.getY(), pixel.getLastTile().color);
